@@ -1,7 +1,9 @@
 name: Build and Deploy to dist Branch
 
 on:
-  - push
+  push:
+    branches:
+      - master
 
 jobs:
   build:
