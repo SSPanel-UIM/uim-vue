@@ -6,15 +6,17 @@
         <uim-dropdown show-arrow>
           <template #dpbtn-content>
             <transition name="fade" mode="out-in">
-              <div :key="paymentType.name">{{paymentType.name}}</div>
+              <div :key="paymentType.name">{{ paymentType.name }}</div>
             </transition>
           </template>
           <template #dp-menu>
             <li
-              v-for="(item,key) in menuList"
+              v-for="(item, key) in menuList"
               @click="changePayementType(key)"
               :key="key"
-            >{{item.name}}</li>
+            >
+              {{ item.name }}
+            </li>
           </template>
         </uim-dropdown>
       </div>
@@ -36,6 +38,7 @@ import Code from "@/components/payment/code.vue";
 import Log from "@/components/payment/log.vue";
 import Trime from "@/components/payment/trimepay.vue";
 import CodePay from "@/components/payment/codepay.vue";
+import F2fPay from "@/components/payment/f2fpay.vue";
 
 export default {
   mixins: [userMixin, storeMap],
@@ -44,7 +47,8 @@ export default {
     "payment-code": Code,
     "payment-log": Log,
     "payment-trimepay": Trime,
-    "payment-codepay": CodePay
+    "payment-codepay": CodePay,
+    "payment-f2fpay": F2fPay
   },
   computed: {
     paymentType: function() {
@@ -53,6 +57,8 @@ export default {
           return this.menuList["trimepay"];
         case "codepay":
           return this.menuList["codepay"];
+        case "f2fpay":
+          return this.menuList["f2fpay"];
         case "code":
           return this.menuList["code"];
         case "log":
@@ -93,6 +99,9 @@ export default {
         break;
       case "codepay":
         curPayment.component = "payment-codepay";
+        break;
+      case "f2fpay":
+        curPayment.component = "payment-f2fpay";
         break;
     }
     this.$set(this.menuList, this.globalConfig.paymentType, curPayment);
