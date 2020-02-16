@@ -3,66 +3,168 @@
     <div class="title-back flex align-center">NODELIST</div>
 
     <transition name="loading-fadex" mode="out-in">
-      <div class="loading flex align-center" v-if="userLoadState === 'beforeload'">NODELIST</div>
+      <div
+        class="loading flex align-center"
+        v-if="userLoadState === 'beforeload'"
+      >
+        NODELIST
+      </div>
 
-      <div class="loading flex align-center" v-else-if="userLoadState === 'loading'" key="loading">
+      <div
+        class="loading flex align-center"
+        v-else-if="userLoadState === 'loading'"
+        key="loading"
+      >
         <div class="spinnercube">
           <div class="cube1"></div>
           <div class="cube2"></div>
         </div>
       </div>
 
-      <div class="usrcenter text-left pure-g space-around" v-else-if="userLoadState === 'loaded'">
+      <div
+        class="usrcenter text-left pure-g space-around"
+        v-else-if="userLoadState === 'loaded'"
+      >
         <div class="pure-u-1 pure-u-xl-6-24 pure-g usrcenter-left">
           <div class="card pure-u-1">
             <div class="flex space-between align-center">
               <div class="card-title">节点详情</div>
             </div>
             <div class="card-body">
-              <div>节点名称：{{currentNode.name}}</div>
-              <div class="node-data">节点地址：{{currentNode.server}}</div>
-              <div class="node-data">{{currentNode.info}}</div>
+              <div>
+                <span class="node-break">节点名称：{{ currentNode.name }}</span>
+              </div>
               <div class="node-data">
-                <span class="tips tips-blue">流量</span>
-                <span>{{currentNode.traffic_used}}</span>
-                <span v-if="currentNode.traffic_limit>0">{{'/ ' + currentNode.traffic_limit}}</span> GB
+                <span class="node-break">
+                  节点地址：{{ currentNode.server | serverfilter }}
+                </span>
+              </div>
+              <div class="node-data">
+                <span class="node-break">{{ currentNode.info }}</span>
+              </div>
+              <div class="node-data">
+                <span class="tips tips-gold">流量</span>
+                <span>{{ currentNode.traffic_used }}</span>
+                <span v-if="currentNode.traffic_limit > 0">{{
+                  "/ " + currentNode.traffic_limit
+                }}</span>
+                GB
               </div>
 
-              <div>
+              <div class="pure-u-1 pure-u-md-12-24 pure-u-xl-1">
                 <div class="node-data">
                   <span class="tips tips-blue">在线</span>
-                  <span v-if="currentNode.online_user>0">{{currentNode.online_user}}</span>
+                  <span v-if="currentNode.online_user > 0">{{
+                    currentNode.online_user
+                  }}</span>
                   <span v-else>0</span>
                 </div>
                 <div class="node-data">
                   <span class="tips tips-blue">倍率</span>
-                  <span>{{currentNode.traffic_rate}}</span>
+                  <span>{{ currentNode.traffic_rate }}</span>
                 </div>
                 <div class="node-data">
                   <span class="tips tips-blue">速率</span>
-                  <span v-if="currentNode.bandwidth>0">{{currentNode.bandwidth}}</span>
+                  <span v-if="currentNode.bandwidth > 0">{{
+                    currentNode.bandwidth
+                  }}</span>
                   <span v-else>无限制</span>
                 </div>
                 <div class="node-data">
                   <span class="tips tips-blue">负载</span>
-                  <span v-if="currentNode.latest_load>0">{{currentNode.latest_load}} %</span>
+                  <span v-if="currentNode.latest_load > 0">
+                    {{ currentNode.latest_load | loadFilter }}
+                  </span>
                   <span v-else>0</span>
+                </div>
+              </div>
+              <div class="pure-u-1 pure-u-md-12-24 pure-u-xl-1">
+                <div v-if="currentNode.sort === 11 || currentNode.sort === 12">
+                  <div class="node-data">
+                    <span>
+                      VMESS链接:
+                      <button
+                        v-uimclip="{ onSuccess: successCopied }"
+                        :data-uimclip="currentNodeInfoRes.vmessUrl"
+                        class="tips tips-blue"
+                      >
+                        复制链接
+                      </button>
+                    </span>
+                  </div>
+                </div>
+                <div
+                  v-if="
+                    currentNode.sort === 0 ||
+                      currentNode.sort === 10 ||
+                      currentNode.sort === 13
+                  "
+                >
+                  <div
+                    v-if="
+                      currentNode.mu_only !== 1 &&
+                        'ssrlink' in currentNodeInfoRes
+                    "
+                    class="node-data"
+                  >
+                    <span>
+                      SSR链接:
+                      <button
+                        v-uimclip="{ onSuccess: successCopied }"
+                        :data-uimclip="currentNodeInfoRes.ssrlink"
+                        class="tips tips-blue"
+                      >
+                        复制普通端口链接
+                      </button>
+                    </span>
+                  </div>
+
+                  <div
+                    v-if="
+                      currentNode.mu_only !== 1 &&
+                        'sslink' in currentNodeInfoRes
+                    "
+                    class="node-data"
+                  >
+                    <span>
+                      SS链接:
+                      <button
+                        v-uimclip="{ onSuccess: successCopied }"
+                        :data-uimclip="currentNodeInfoRes.sslink"
+                        class="tips tips-blue"
+                      >
+                        复制普通端口链接
+                      </button>
+                    </span>
+                  </div>
+
+                  <div v-if="currentNode.mu_only !== -1" class="node-data">
+                    <span>
+                      <button @click="checkSinglePort" class="tips tips-gold">
+                        查看单端口配置
+                      </button>
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div class="pure-u-1 pure-u-xl-17-24">
-          <div class="card margin-nobottom-sm">
+          <div v-if="listType === 'node'" class="card margin-nobottom-sm">
             <div class="flex space-between align-center">
               <div class="card-title">节点列表</div>
               <div class="card-title-right">
                 <uim-dropdown>
                   <template #dpbtn-content>
                     <transition name="fade" mode="out-in">
-                      <div
-                        :key="currentNodeClass"
-                      >{{currentNodeClass===0 ? '普通节点' : "VIP " + currentNodeClass}}</div>
+                      <div :key="currentNodeClass">
+                        {{
+                          currentNodeClass === 0
+                            ? "普通节点"
+                            : "VIP " + currentNodeClass
+                        }}
+                      </div>
                     </transition>
                   </template>
                   <template #dp-menu>
@@ -70,7 +172,9 @@
                       @click="nodeClassChange(item.class)"
                       v-for="item in classDrop"
                       :key="item.class"
-                    >{{item.name}}</li>
+                    >
+                      {{ item.name }}
+                    </li>
                   </template>
                 </uim-dropdown>
               </div>
@@ -79,10 +183,10 @@
               <div class="nodelist flex space-between">
                 <div
                   v-for="(node, index) in nodeFilter"
-                  :class="{ 'nodeitem-avtive':currentNode.id === node.id }"
+                  :class="{ 'nodeitem-avtive': currentNode.id === node.id }"
                   class="nodeitem"
                   :key="node.id"
-                  @click="enterCurrentNode(index,node.id)"
+                  @click="enterCurrentNode(index, node.id)"
                 >
                   <div class="flex space-between align-center">
                     <div class="nodename">
@@ -92,17 +196,47 @@
                         :src="'/images/prefix/' + node.flag"
                         alt
                       />
-                      {{node.name | tailFilter}}
+                      {{ node.name | tailFilter }}
                     </div>
                     <div
                       class="node-online-status"
-                      :class="[{'node-online':node.online === 1},{'node-unset':node.online === 0},{'node-offline':node.online !== 0 && node.online !==1}]"
+                      :class="[
+                        { 'node-online': node.online === 1 },
+                        { 'node-unset': node.online === 0 },
+                        {
+                          'node-offline': node.online !== 0 && node.online !== 1
+                        }
+                      ]"
                     ></div>
                   </div>
                 </div>
                 <div class="nodeitem-fix"></div>
               </div>
             </div>
+          </div>
+          <div
+            v-else-if="listType === 'nodeDetail'"
+            class="card margin-nobottom-sm"
+          >
+            <uim-nodedetail-v2ray
+              v-if="currentNode.sort === 11 || currentNode.sort === 12"
+              @return-nodelist="setListType('node')"
+              :node="currentNode"
+              :nodeInfoRes="currentNodeInfoRes"
+            ></uim-nodedetail-v2ray>
+            <uim-nodedetail-ss
+              v-if="
+                currentNode.sort === 0 ||
+                  currentNode.sort === 10 ||
+                  currentNode.sort === 13
+              "
+              @return-nodelist="setListType('node')"
+              @get-singleport="getSinglePort"
+              :ifSinglePort="ifSinglePort"
+              :node="currentNode"
+              :nodeInfoRes="currentNodeInfoRes"
+              :singlePort="currentSinglePort"
+            ></uim-nodedetail-ss>
           </div>
         </div>
       </div>
@@ -116,17 +250,44 @@ import nodeMap from "@/mixins/nodeMap";
 import { _get } from "../js/fetch";
 
 import Dropdown from "@/components/dropdown.vue";
+import V2rayDetail from "@/components/node/V2rayDetail.vue";
+import SSDetail from "@/components/node/SSDetail.vue";
 
 export default {
   mixins: [storeMap, nodeMap],
   components: {
-    "uim-dropdown": Dropdown
+    "uim-dropdown": Dropdown,
+    "uim-nodedetail-v2ray": V2rayDetail,
+    "uim-nodedetail-ss": SSDetail
   },
   filters: {
     tailFilter: function(value) {
       let index = value.indexOf(" - ");
       value = value.slice(0, index);
       return value;
+    },
+    serverfilter: function(value) {
+      if (value.indexOf(";") === -1) {
+        return value;
+      } else {
+        if (value.indexOf("server=") === -1) {
+          value = value.slice(0, value.indexOf(";"));
+          return value;
+        } else {
+          let result;
+          let arr = value.split("|");
+          for (let i = 0; i <= arr.length - 1; i++) {
+            if (arr[i].indexOf("server=") !== -1) {
+              result = arr[i].slice(arr[i].indexOf("=") + 1);
+            }
+          }
+          return result;
+        }
+      }
+    },
+    loadFilter(value) {
+      let number = parseFloat(value).toFixed(2);
+      return `${number} %`;
     }
   },
   computed: {
@@ -164,9 +325,15 @@ export default {
   },
   data: function() {
     return {
+      listType: "node",
       userLoadState: "beforeload",
       currentNodeClass: 0,
-      currentNode: {}
+      currentNode: {},
+      currentNodeInfoRes: {
+        vmessUrl: ""
+      },
+      currentSinglePort: {},
+      ifSinglePort: false
     };
   },
   methods: {
@@ -176,10 +343,34 @@ export default {
     setCurrentNode(index) {
       this.currentNode = this.nodeFilter[index];
     },
+    setListType(type) {
+      this.listType = type;
+    },
+    getNodeinfo(nodeid) {
+      _get(`/nodeinfo/${nodeid}`, "include").then(r => {
+        this.currentNodeInfoRes = r;
+        window.console.log(this.currentNodeInfoRes);
+      });
+    },
+    getSinglePort(data) {
+      _get(
+        `/nodeinfo/${this.currentNode.id}?ismu=${data.server.server}`,
+        "include"
+      ).then(r => {
+        this.currentSinglePort = r;
+        this.$set(this.currentSinglePort, "data", data);
+        window.console.log(this.currentSinglePort);
+      });
+    },
     enterCurrentNode(index, id) {
       this.setCurrentNode(index);
-      _get(`/nodeinfo/${id}`, "include").then(r => {
-        window.console.log(r);
+      this.setListType("nodeDetail");
+      this.getNodeinfo(id);
+    },
+    checkSinglePort() {
+      this.setListType("nodeDetail");
+      this.$nextTick(function() {
+        this.ifSinglePort = !this.ifSinglePort;
       });
     }
   },
@@ -217,15 +408,16 @@ export default {
       _get("/getnodelist", "include")
         .then(r => {
           if (r.ret === 1) {
-            window.console.log(r);
-
             this.setNodeList(r.nodeinfo.nodes);
+            this.setNodeMuPortList(r.nodeinfo.nodes_muport);
 
             window.console.log(this.nodeList);
+            window.console.log(this.nodeMuPortList);
 
             this.currentNodeClass = this.nodeList[0].class;
 
             this.setCurrentNode(0);
+            this.getNodeinfo(this.currentNode.id);
           } else if (r.ret === -1) {
             this.ajaxNotLogin();
           }
@@ -311,6 +503,10 @@ export default {
 .flag {
   width: 35px;
   margin-right: 0.5rem;
+}
+
+.node-break {
+  word-break: break-all;
 }
 
 @media screen and (min-width: 35.5em) {

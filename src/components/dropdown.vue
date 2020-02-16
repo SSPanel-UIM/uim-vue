@@ -1,13 +1,22 @@
 <template>
   <div class="uim-dropdown">
-    <button @click.stop="show" class="uim-dropdown-btn">
+    <button
+      @click.stop="show"
+      :style="{ width: btnwidth }"
+      class="uim-dropdown-btn"
+    >
       <span>
         <slot name="dpbtn-content"></slot>
       </span>
-      <font-awesome-icon v-if="showArrow" icon="caret-down"/>
+      <font-awesome-icon v-if="showArrow" icon="caret-down" />
     </button>
     <transition name="dropdown-fade" mode="out-in">
-      <div v-show="isDropdown" @click.stop="hide" class="uim-dropdown-menu">
+      <div
+        v-show="isDropdown"
+        :style="{ width: btnwidth }"
+        @click.stop="hide"
+        class="uim-dropdown-menu"
+      >
         <ul>
           <slot name="dp-menu"></slot>
         </ul>
@@ -22,6 +31,10 @@ export default {
     showArrow: {
       type: Boolean,
       default: false
+    },
+    btnwidth: {
+      type: String,
+      default: ""
     }
   },
   data: function() {

@@ -2,16 +2,28 @@
   <div class="page-user pure-u-1">
     <div class="title-back flex align-center">USERCENTER</div>
     <transition name="loading-fadex" mode="out-in">
-      <div class="loading flex align-center" v-if="userLoadState === 'beforeload'">USERCENTER</div>
+      <div
+        class="loading flex align-center"
+        v-if="userLoadState === 'beforeload'"
+      >
+        USERCENTER
+      </div>
 
-      <div class="loading flex align-center" v-else-if="userLoadState === 'loading'" key="loading">
+      <div
+        class="loading flex align-center"
+        v-else-if="userLoadState === 'loading'"
+        key="loading"
+      >
         <div class="spinnercube">
           <div class="cube1"></div>
           <div class="cube2"></div>
         </div>
       </div>
 
-      <div class="usrcenter text-left pure-g space-around" v-else-if="userLoadState === 'loaded'">
+      <div
+        class="usrcenter text-left pure-g space-around"
+        v-else-if="userLoadState === 'loaded'"
+      >
         <div class="pure-u-1 pure-u-xl-6-24 pure-g usrcenter-left">
           <div class="pure-u-1 pure-u-sm-8-24 pure-u-xl-1 card account-base">
             <div class="flex space-between">
@@ -21,53 +33,60 @@
               <div class="pure-g">
                 <div class="pure-u-1-2 pure-u-sm-1 pure-u-xl-1-2">
                   <p class="tips tips-blue">用户名</p>
-                  <p class="font-light">{{userCon.user_name}}</p>
+                  <p class="font-light">{{ userCon.user_name }}</p>
                   <p class="tips tips-blue">邮箱</p>
-                  <p class="font-light">{{userCon.email}}</p>
+                  <p class="font-light">{{ userCon.email }}</p>
                 </div>
                 <div class="pure-u-1-2 pure-u-sm-1 pure-u-xl-1-2">
                   <p class="tips tips-blue">VIP等级</p>
                   <p class="font-light">
                     <span
                       class="user-config"
-                      :class="{ 'font-gold-trans':userResourseTrans }"
-                    >Lv. {{userCon.class}}</span>
+                      :class="{ 'font-gold-trans': userResourseTrans }"
+                      >Lv. {{ userCon.class }}</span
+                    >
                   </p>
                   <p class="tips tips-blue">余额</p>
                   <p class="font-light">
                     <span
                       class="user-config"
-                      :class="{ 'font-red-trans':userCreditTrans }"
-                    >{{userCon.money}}</span>
+                      :class="{ 'font-red-trans': userCreditTrans }"
+                      >{{ userCon.money }}</span
+                    >
                   </p>
                 </div>
               </div>
             </div>
           </div>
-          <div class="pure-u-1 pure-u-sm-15-24 pure-u-xl-1 card quickset margin-nobottom-xl">
+          <div
+            class="pure-u-1 pure-u-sm-15-24 pure-u-xl-1 card quickset margin-nobottom-xl"
+          >
             <div class="card-title">快速配置</div>
-            <div class="card-body">
+            <div class="card-body user-quickset">
               <div class="pure-g">
                 <button
                   @click="changeAgentType"
                   v-for="dl in downloads"
                   :data-type="dl.type"
-                  :class="{ 'index-btn-active':currentDlType === dl.type }"
+                  :class="{ 'index-btn-active': currentDlType === dl.type }"
                   class="pure-u-1-3 btn-user dl-type"
                   :key="dl.type"
-                >{{dl.type}}</button>
+                >
+                  {{ dl.type }}
+                </button>
                 <h5 class="pure-u-1">平台选择/客户端下载</h5>
                 <transition name="rotate-fade" mode="out-in">
                   <div class="pure-g dl-link" :key="typeToken.tagkey">
                     <uim-dropdown
-                      v-for="(value,key) in downloads[typeToken.arrIndex].agent"
+                      v-for="(value, key) in downloads[typeToken.arrIndex]
+                        .agent"
                       class="pure-u-1-3 btn-user"
                       :key="key"
                     >
-                      <template #dpbtn-content>{{key}}</template>
+                      <template #dpbtn-content>{{ key }}</template>
                       <template #dp-menu>
                         <li v-for="agent in value" :key="agent.id">
-                          <a :href="agent.href">{{agent.agentName}}</a>
+                          <a :href="agent.href">{{ agent.agentName }}</a>
                         </li>
                       </template>
                     </uim-dropdown>
@@ -75,9 +94,14 @@
                 </transition>
                 <h5 class="pure-u-1 flex align-center space-between">
                   <span>订阅链接</span>
-                  <span class="link-reset relative flex justify-center text-center">
-                    <button @click="showToolTip('resetConfirm')" class="tips tips-red">
-                      <font-awesome-icon icon="sync-alt"/>&nbsp;重置链接
+                  <span
+                    class="link-reset relative flex justify-center text-center"
+                  >
+                    <button
+                      @click="showToolTip('resetConfirm')"
+                      class="tips tips-red"
+                    >
+                      <font-awesome-icon icon="sync-alt" />&nbsp;重置链接
                     </button>
                     <uim-tooltip
                       v-show="toolTips.resetConfirm"
@@ -86,11 +110,17 @@
                       <template #tooltip-inner>
                         <span>确定要重置订阅链接？</span>
                         <div>
-                          <button @click="resetSubscribLink" class="tips tips-green">
-                            <font-awesome-icon icon="check" fixed-width/>
+                          <button
+                            @click="resetSubscribLink"
+                            class="tips tips-green"
+                          >
+                            <font-awesome-icon icon="check" fixed-width />
                           </button>
-                          <button @click="hideToolTip('resetConfirm')" class="tips tips-red">
-                            <font-awesome-icon icon="times" fixed-width/>
+                          <button
+                            @click="hideToolTip('resetConfirm')"
+                            class="tips tips-red"
+                          >
+                            <font-awesome-icon icon="times" fixed-width />
                           </button>
                         </div>
                       </template>
@@ -100,27 +130,29 @@
                 <transition name="rotate-fade" mode="out-in">
                   <div class="input-copy" :key="typeToken.subKey">
                     <div class="pure-g align-center relative">
-                      <span class="pure-u-6-24">{{ssrlinkTitle}}</span>
-                      <span class="pure-u-18-24 pure-g relative flex justify-center text-center">
+                      <span class="pure-u-6-24">{{ ssrlinkTitle }}</span>
+                      <span
+                        class="pure-u-18-24 pure-g relative flex justify-center text-center"
+                      >
                         <input
-                          v-uimclip="{ onSuccess:successCopied }"
+                          v-uimclip="{ onSuccess: successCopied }"
                           :data-uimclip="typeToken.subUrl"
                           @mouseenter="showToolTip(typeToken.muType)"
                           @mouseleave="hideToolTip(typeToken.muType)"
-                          :class="{ 'sublink-reset':subLinkTrans }"
+                          :class="{ 'sublink-reset': subLinkTrans }"
                           class="tips tips-blue pure-u-1"
                           type="text"
                           name
                           id
                           :value="typeToken.subUrl"
                           readonly
-                        >
+                        />
                         <uim-tooltip
                           v-show="toolTips[typeToken.muType]"
                           class="uim-tooltip-top flex justify-center"
                         >
                           <template #tooltip-inner>
-                            <span>{{typeToken.subUrl}}</span>
+                            <span>{{ typeToken.subUrl }}</span>
                           </template>
                         </uim-tooltip>
                       </span>
@@ -130,30 +162,72 @@
                       class="pure-g align-center relative"
                     >
                       <span class="pure-u-6-24">单端口:</span>
-                      <span class="pure-u-18-24 pure-g relative flex justify-center text-center">
+                      <span
+                        class="pure-u-18-24 pure-g relative flex justify-center text-center"
+                      >
                         <input
-                          v-uimclip="{ onSuccess:successCopied }"
+                          v-uimclip="{ onSuccess: successCopied }"
                           :data-uimclip="suburlMu1"
                           @mouseenter="showToolTip('mu1')"
                           @mouseleave="hideToolTip('mu1')"
-                          :class="{ 'sublink-reset':subLinkTrans }"
+                          :class="{ 'sublink-reset': subLinkTrans }"
                           class="tips tips-blue pure-u-1"
                           type="text"
                           name
                           id
                           :value="suburlMu1"
                           readonly
-                        >
+                        />
                         <uim-tooltip
                           v-show="toolTips.mu1"
                           class="uim-tooltip-top flex justify-center"
                         >
                           <template #tooltip-inner>
-                            <span>{{suburlMu1}}</span>
+                            <span>{{ suburlMu1 }}</span>
                           </template>
                         </uim-tooltip>
                       </span>
                     </div>
+                    <button
+                      v-if="currentDlType === 'SSR'"
+                      v-uimclip="{ onSuccess: successCopied }"
+                      :data-uimclip="userCon.ssr_url_all"
+                      class="tips tips-cyan btn-copy"
+                    >
+                      <font-awesome-icon :icon="['far', 'copy']" />&nbsp;
+                      <span v-if="mergeSub !== true">复制所有普通端口链接</span>
+                      <span v-else>复制所有节点链接</span>
+                    </button>
+                    <button
+                      v-if="currentDlType === 'SSR' && mergeSub !== true"
+                      v-uimclip="{ onSuccess: successCopied }"
+                      :data-uimclip="userCon.ssr_url_all_mu"
+                      class="tips tips-cyan btn-copy"
+                    >
+                      <font-awesome-icon
+                        :icon="['far', 'copy']"
+                      />&nbsp;复制所有单端口链接
+                    </button>
+                    <button
+                      v-if="currentDlType === 'SS/SSD'"
+                      v-uimclip="{ onSuccess: successCopied }"
+                      :data-uimclip="userCon.ssd_url_all"
+                      class="tips tips-cyan btn-copy"
+                    >
+                      <font-awesome-icon
+                        :icon="['far', 'copy']"
+                      />&nbsp;复制所有节点链接
+                    </button>
+                    <button
+                      v-if="currentDlType === 'V2RAY'"
+                      v-uimclip="{ onSuccess: successCopied }"
+                      :data-uimclip="userCon.vmess_url_all"
+                      class="tips tips-cyan btn-copy"
+                    >
+                      <font-awesome-icon
+                        :icon="['far', 'copy']"
+                      />&nbsp;复制所有vmess链接
+                    </button>
                   </div>
                 </transition>
               </div>
@@ -165,9 +239,11 @@
             <uim-anchor>
               <template #uim-anchor-inner>
                 <li
-                  v-for="(page,index) in userSettings.pages"
+                  v-for="(page, index) in userSettings.pages"
                   @click="changeUserSetPage(index)"
-                  :class="{ 'uim-anchor-active':userSettings.currentPage === page.id }"
+                  :class="{
+                    'uim-anchor-active': userSettings.currentPage === page.id
+                  }"
                   :data-page="page.id"
                   :key="page.id"
                 ></li>
@@ -190,7 +266,9 @@
               <uim-dropdown show-arrow>
                 <template #dpbtn-content>
                   <transition name="fade" mode="out-in">
-                    <div :key="currentCardComponent">{{menuOptions[currentCardComponentIndex].name}}</div>
+                    <div :key="currentCardComponent">
+                      {{ menuOptions[currentCardComponentIndex].name }}
+                    </div>
                   </transition>
                 </template>
                 <template #dp-menu>
@@ -199,10 +277,14 @@
                     v-for="menu in menuOptions"
                     :data-component="menu.id"
                     :key="menu.id"
-                  >{{menu.name}}</li>
+                  >
+                    {{ menu.name }}
+                  </li>
                 </template>
               </uim-dropdown>
-              <a v-if="userCon.is_admin === true" class="btn-user" href="/admin">运营中心</a>
+              <a v-if="userCon.is_admin === true" class="btn-user" href="/admin"
+                >运营中心</a
+              >
             </div>
             <div class="pure-u-1-2 text-right btngroup-right">
               <a href="/user" class="btn-user">管理面板</a>
@@ -222,7 +304,9 @@
                 class="btn-inline text-red"
                 :data-component="menuOptions[3].id"
                 slot="inviteToShop"
-              >成为VIP请点击这里</button>
+              >
+                成为VIP请点击这里
+              </button>
             </component>
           </transition>
         </div>
@@ -522,6 +606,13 @@ export default {
 .pure-g.usrcenter-left {
   justify-content: space-around;
   display: flex;
+}
+.user-quickset h5 {
+  margin: 0.75rem 0;
+}
+button.tips.btn-copy {
+  display: block;
+  margin-top: 0.5rem;
 }
 @media screen and (min-width: 80em) {
   .pure-g.usrcenter-left {

@@ -1,15 +1,14 @@
 export default {
   inserted: function (el, binding) {
     el.addEventListener('click', (e) => {
-      let input = document.createElement('input')
+      let textarea = document.createElement('textarea')
       let value = el.dataset.uimclip
-      input.setAttribute('type', 'text')
-      input.setAttribute('value', value)
-      el.after(input)
-      input.focus()
-      input.setSelectionRange(0, value.length)
+      textarea.value = value
+      el.after(textarea)
+      textarea.focus()
+      textarea.setSelectionRange(0, value.length)
       document.execCommand('copy')
-      input.remove();
+      textarea.remove();
       binding.value.onSuccess();
     })
   }
