@@ -262,9 +262,7 @@ export default {
   },
   filters: {
     tailFilter: function(value) {
-      let index = value.indexOf(" - ");
-      value = value.slice(0, index);
-      return value;
+      return value.split(" -")[0].replace(/^\s*|\s*$/g, "");
     },
     serverfilter: function(value) {
       if (value.indexOf(";") === -1) {
